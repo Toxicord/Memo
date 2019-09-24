@@ -1,12 +1,7 @@
+
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextPane;
+import javax.swing.*;
 
 
 
@@ -57,26 +52,58 @@ public class Memo {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(10, 22, 585, 657);
 		panel.add(tabbedPane);
-		
-		
-		JTextPane textPane = new JTextPane();
-		TextArea text = new TextArea();
         Font font = new Font("Serif", Font.ITALIC, 20);
+        
+        JTextArea textArea = new JTextArea(40,5);
+        //tabbedPane.addTab("New tab", null, textArea, null);
+        
+
+        
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        tabbedPane.addTab("New tab", null, scrollPane, null);
+        
+        
+        JTextPane textPane_2 = new JTextPane();
+        tabbedPane.addTab("New tab", null, textPane_2, null);
+        
+        JToolBar toolBar = new JToolBar();
+        toolBar.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        toolBar.setBounds(61, 22, 64, 24);
+        frame.getContentPane().add(toolBar);
+        
+        
+        
+        /* Combo box for Font*/
+        JComboBox comboBox = new JComboBox();
+        comboBox.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mousePressed(MouseEvent e) {
+        		scrollPane.setFont(font);
+        	}
+        });
+        comboBox.setModel(new DefaultComboBoxModel(new String[] {"Arial", "Tahoma"}));
+        comboBox.setFont(new Font("Tahoma", Font.PLAIN, 11));
+        toolBar.add(comboBox);
+        
+        
+        
+        
+        
+        
+        JTextPane textPane = new JTextPane();
+        TextArea text = new TextArea();
         textPane.setFont(font);
         textPane.setForeground(Color.blue);
         textPane.add(text, BorderLayout.CENTER);
-
-        tabbedPane.addTab("New tab", null, textPane, null);
 		
-		
-		
-		JButton btnNewButton_1 = new JButton("Add new tab");
-		tabbedPane.addTab("+", null, btnNewButton_1, null);
+		JButton btnNewButton_1 = new JButton("+");
+		tabbedPane.setTabComponentAt(1, btnNewButton_1);
 		
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JTextPane textPane1 = new JTextPane();
-				tabbedPane.insertTab("New tab", null, textPane1, null, tabbedPane.getTabCount() - 1);
+				JTextArea textArea = new JTextArea(40,5);
+				JScrollPane scrollPane1 = new JScrollPane(textArea);
+				tabbedPane.insertTab("New tab", null, scrollPane1, null, tabbedPane.getTabCount() - 1);
 			}
 
 		});
