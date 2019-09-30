@@ -17,10 +17,10 @@ import javax.swing.*;
 public class Memo {
 
 	private JFrame frame;
-	private JButton save;
-	private JTextArea textArea;
-	
-	//Launch the application.
+
+	/**
+	 * Launch the application.
+	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -31,18 +31,19 @@ public class Memo {
 					e.printStackTrace();
 				}
 			}
-		}
-		);
+		});
 	}
 
-	
-	//Creates application call to initialize method
-	
+	/**
+	 * Create the application.
+	 */
 	public Memo() {
 		initialize();
 	}
 
-	//initialize method
+	/**
+	 * Initialize the contents of the frame.
+	 */
 	private void initialize() {
 		
 		frame = new JFrame();
@@ -79,7 +80,7 @@ public class Memo {
         
         
         
-        /* Font testing below
+        /* Combo box for Font*/
         JComboBox comboBox = new JComboBox();
         comboBox.addMouseListener(new MouseAdapter() {
         	@Override
@@ -90,7 +91,7 @@ public class Memo {
         comboBox.setModel(new DefaultComboBoxModel(new String[] {"Arial", "Tahoma"}));
         comboBox.setFont(new Font("Tahoma", Font.PLAIN, 11));
         toolBar.add(comboBox);
-        */
+        
         
         
         
@@ -110,22 +111,10 @@ public class Memo {
 				JTextArea textArea = new JTextArea(40,5);
 				JScrollPane scrollPane1 = new JScrollPane(textArea);
 				tabbedPane.insertTab("New tab", null, scrollPane1, null, tabbedPane.getTabCount() - 1);
-			}});
-		
-		//below is daytons save testing (from this line to 
-		save = new JButton("Save to file");
-        save.addActionListener(new ActionListener() {
+			}
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveToFile();
-            }
-        });
-        frame.add(textArea);
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(save);
-        //end daytons save testing
-        
+		});
+		
 		
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -134,29 +123,7 @@ public class Memo {
 		menuBar.add(mnFile);
 		JMenu mnWindows = new JMenu("Windows");
 		menuBar.add(mnWindows);
-	}
-	protected void saveToFile() {
-        JFileChooser fileChooser = new JFileChooser();
-        int retval = fileChooser.showSaveDialog(save);
-        if (retval == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            if (file != null) {
-                if (!file.getName().toLowerCase().endsWith(".txt")) {
-                    file = new File(file.getParentFile(), file.getName() + ".txt");
-                }
-                try {
-                	textArea.write(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));
-                    Desktop.getDesktop().open(file);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
+		
 		
 		
 	}
