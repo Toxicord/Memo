@@ -39,7 +39,7 @@ public class FontDemo {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(){
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,39 +49,40 @@ public class FontDemo {
 		textPane.setBounds(53, 41, 335, 231);
 		frame.getContentPane().add(textPane);
 		
-//		JComboBox comboBox = new JComboBox();
-//		comboBox.setEditable(true);
-//		comboBox.setBounds(53, 6, 76, 27);
-//		frame.getContentPane().add(comboBox);
-//		String[] fontList = {"Serif", "Times New Roman", "Arial"};
-//		for (int i = 0; i < fontList.length; i ++) {
-//			comboBox.addItem(fontList[i]);
-//		}
-//		
-//		public void actionPerformed(ActionEvent evt) {
-//		    JComboBox source = (JComboBox) evt.getSource();
-//		    String item = (String) source.getSelectedItem();
-//		    textPane.setFont(new Font(item, Font.PLAIN, 12));
-//		  }
+		JComboBox comboBox = new JComboBox();
+		comboBox.setEditable(true);
+		comboBox.setBounds(53, 6, 76, 27);
+		frame.getContentPane().add(comboBox);
+		String[] fontList = {"Serif", "Times New Roman", "Arial"};
+		comboBox.addItem("Arial");
+		for (int i = 0; i < fontList.length; i ++) {
+			comboBox.addItem(fontList[i]);
+		}
 		
-		GraphicsEnvironment graphEnviron = 
-			       GraphicsEnvironment.getLocalGraphicsEnvironment();
-			Font[] allFonts = graphEnviron.getAllFonts();
-
-			JComboBox<Font> fontBox = new JComboBox<>(allFonts);
-			fontBox.setRenderer(new DefaultListCellRenderer() {
-			   @Override
-			   public Component getListCellRendererComponent(JList<?> list,
-			         Object value, int index, boolean isSelected, boolean cellHasFocus) {
-			      if (value != null) {
-			         Font font = (Font) value;
-			         value = font.getName();
-			      }
-			      return super.getListCellRendererComponent(list, value, index,
-			            isSelected, cellHasFocus);
-			   }
-			});
-			JOptionPane.showMessageDialog(null, new JScrollPane(fontBox));
 		
 	}
+	
+		
+//		GraphicsEnvironment graphEnviron = 
+//			       GraphicsEnvironment.getLocalGraphicsEnvironment();
+//			Font[] allFonts = graphEnviron.getAllFonts();
+//
+//			JComboBox<Font> fontBox = new JComboBox<Font>(allFonts);
+//			fontBox.setRenderer(new DefaultListCellRenderer() {
+//			   @Override
+//			   public Component getListCellRendererComponent(JList<?> list,
+//			         Object value, int index, boolean isSelected, boolean cellHasFocus) {
+//			      if (value != null) {
+//			         Font font = (Font) value;
+//			         value = font.getName();
+//			      }
+//			      return super.getListCellRendererComponent(list, value, index,
+//			            isSelected, cellHasFocus);
+//			   }
+//			});
+//			JOptionPane.showMessageDialog(null, new JScrollPane(fontBox));
+//		
+//	}
+
+	
 }
