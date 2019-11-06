@@ -1,9 +1,12 @@
 package src;
 
-import java.awt.EventQueue;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.JFrame;
+import javax.swing.*;
+import javax.swing.JList;
 import javax.swing.JTextPane;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 
 public class FontDemo {
@@ -46,16 +49,39 @@ public class FontDemo {
 		textPane.setBounds(53, 41, 335, 231);
 		frame.getContentPane().add(textPane);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(53, 6, 76, 27);
-		frame.getContentPane().add(comboBox);
-		String[] fontList = {"Serif", "Times New Roman", "Arial"};
-		for (int i = 0; i < fontList.length; i ++) {
-			comboBox.addItem((String) fontList[i]);
-		}
+//		JComboBox comboBox = new JComboBox();
+//		comboBox.setEditable(true);
+//		comboBox.setBounds(53, 6, 76, 27);
+//		frame.getContentPane().add(comboBox);
+//		String[] fontList = {"Serif", "Times New Roman", "Arial"};
+//		for (int i = 0; i < fontList.length; i ++) {
+//			comboBox.addItem(fontList[i]);
+//		}
+//		
+//		public void actionPerformed(ActionEvent evt) {
+//		    JComboBox source = (JComboBox) evt.getSource();
+//		    String item = (String) source.getSelectedItem();
+//		    textPane.setFont(new Font(item, Font.PLAIN, 12));
+//		  }
 		
-		
-		
+		GraphicsEnvironment graphEnviron = 
+			       GraphicsEnvironment.getLocalGraphicsEnvironment();
+			Font[] allFonts = graphEnviron.getAllFonts();
+
+			JComboBox<Font> fontBox = new JComboBox<>(allFonts);
+			fontBox.setRenderer(new DefaultListCellRenderer() {
+			   @Override
+			   public Component getListCellRendererComponent(JList<?> list,
+			         Object value, int index, boolean isSelected, boolean cellHasFocus) {
+			      if (value != null) {
+			         Font font = (Font) value;
+			         value = font.getName();
+			      }
+			      return super.getListCellRendererComponent(list, value, index,
+			            isSelected, cellHasFocus);
+			   }
+			});
+			JOptionPane.showMessageDialog(null, new JScrollPane(fontBox));
 		
 	}
 }
