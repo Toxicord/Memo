@@ -16,7 +16,8 @@ public class Memo_redo implements ActionListener{
 	
 	JTabbedPane textTabbedPane = new JTabbedPane();
 	
-	JEditorPane[] textEdittor;
+	JEditorPane[] textEditor;
+	int totalNumbTab = 0;
 	
 	JButton addTabButton = new JButton("Add new tab");
 	
@@ -30,8 +31,13 @@ public class Memo_redo implements ActionListener{
 		mainFrame.setSize(400,200);
 		mainFrame.setLayout(new BorderLayout());
 		
+		
 		createMenuBar();
 		createTextMemo();
+		
+		mainFrame.add(menuBar, BorderLayout.SOUTH);
+		mainFrame.add(textPanel, BorderLayout.CENTER);
+		
 		mainFrame.setVisible(true);
 	}
 	private void createTextMemo() {
@@ -53,7 +59,7 @@ public class Memo_redo implements ActionListener{
 		String buttonClicked = e.getActionCommand();
 		
 		if (buttonClicked.equalsIgnoreCase("Add new tab")) {
-			
+			textTabbedPane.add(textEditor[totalNumbTab] = new JEditorPane());
 		}
 		
 	}
