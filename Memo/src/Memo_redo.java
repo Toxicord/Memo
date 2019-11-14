@@ -1,3 +1,5 @@
+
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -16,8 +18,8 @@ public class Memo_redo implements ActionListener{
 	
 	JTabbedPane textTabbedPane = new JTabbedPane();
 	
-	JEditorPane[] textEditor;
-	int totalNumbTab = 0;
+	JTextPane[] textEditor = new JTextPane[100];
+	int totalNumbTab = 1;
 	
 	JButton addTabButton = new JButton("Add new tab");
 	
@@ -35,15 +37,28 @@ public class Memo_redo implements ActionListener{
 		createMenuBar();
 		createTextMemo();
 		
-		mainFrame.add(menuBar, BorderLayout.SOUTH);
+		mainFrame.add(menuBar, BorderLayout.NORTH);
 		mainFrame.add(textPanel, BorderLayout.CENTER);
 		
 		mainFrame.setVisible(true);
 	}
 	private void createTextMemo() {
-		// "Add Tab" button for the tab pane
-		textTabbedPane.setComponentAt(0, addTabButton);
+		// Set layout and bounds for the TextPanel that contains text editing area
+		textPanel.setLayout(new BorderLayout());
+		textPanel.setBounds(168, 72, 605, 704);
+
+		
+		// Create the first TextPane
+		textEditor[0] = new JTextPane();
+		// Initialize the first tab with a TextPane
+		textTabbedPane.addTab("New Tab", textEditor[0]);
+		
+		// "Add Tab" button for the tab pane, and add actionListener to the button
+		textTabbedPane.addTab(null, null);
+		textTabbedPane.setTabComponentAt(1, addTabButton);
 		addTabButton.addActionListener(this);
+		
+		textPanel.add(textTabbedPane);
 		
 	}
 
@@ -59,7 +74,10 @@ public class Memo_redo implements ActionListener{
 		String buttonClicked = e.getActionCommand();
 		
 		if (buttonClicked.equalsIgnoreCase("Add new tab")) {
-			textTabbedPane.add(textEditor[totalNumbTab] = new JEditorPane());
+			// Create new TextPane
+			textEditor[totalNumbTab] = new JTextPane();
+			// Insert the new TextPane above to the latest tab
+			textTabbedPane.insertTab("New tab", null, textEditor[totalNumbTab], null, textTabbedPane.getTabCount() - 1);
 		}
 		
 	}
