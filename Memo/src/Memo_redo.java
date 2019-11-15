@@ -8,20 +8,32 @@ import javax.swing.*;
 public class Memo_redo implements ActionListener{
 	private JFrame mainFrame = new JFrame();
 	
-	JMenuBar menuBar = new JMenuBar();
-	JMenu mnFile = new JMenu("File");
-	JMenu mnWindows = new JMenu("Windows");
-	JMenuItem mnSave = new JMenuItem("Save");
-	JMenuItem mnOpen = new JMenuItem("Open");
+	private JMenuBar menuBar = new JMenuBar();
+	private JMenu mnFile = new JMenu("File");
+	private JMenu mnWindows = new JMenu("Windows");
+	private JMenuItem mnSave = new JMenuItem("Save");
+	private JMenuItem mnOpen = new JMenuItem("Open");
 	
-	JPanel textPanel = new JPanel();
+	private JPanel textPanel = new JPanel();
+	private JPanel toolPanel = new JPanel();
 	
-	JTabbedPane textTabbedPane = new JTabbedPane();
+	private JTabbedPane textTabbedPane = new JTabbedPane();
 	
-	JTextPane[] textEditor = new JTextPane[100];
-	int totalNumbTab = 1;
+	private JTextPane[] textEditor = new JTextPane[100];
+	// Total number of tabs to keep track of the numbers of tabs
+	private int totalNumbTab = 1;
 	
-	JButton addTabButton = new JButton("Add new tab");
+	private JButton addTabButton = new JButton("Add new tab");
+	private JButton boldButton = new JButton("B");
+	private JButton italicButton = new JButton("I");
+	private JButton underlineButton = new JButton("U");
+	
+	
+	private JToolBar sideToolBar = new JToolBar(JToolBar.VERTICAL);
+	
+	private JComboBox fontComboBox = new JComboBox();
+	private JComboBox highlightColor = new JComboBox();
+	
 	
 	public static void main(String[] args) {
 		Memo_redo DemoMemo = new Memo_redo("Demo");
@@ -35,14 +47,38 @@ public class Memo_redo implements ActionListener{
 		
 		
 		createMenuBar();
-		createTextMemo();
+		createTextPanel();
+		createToolBar();
+		
+		createFontComboBox();
 		
 		mainFrame.add(menuBar, BorderLayout.NORTH);
 		mainFrame.add(textPanel, BorderLayout.CENTER);
+		mainFrame.add(toolPanel, BorderLayout.WEST);
+
 		
 		mainFrame.setVisible(true);
 	}
-	private void createTextMemo() {
+	
+	private void createFontComboBox() {
+		
+	}
+
+	private void createToolBar() {
+		toolPanel.setLayout(new BorderLayout());
+		sideToolBar.setRollover(true);
+		sideToolBar.addSeparator();
+		sideToolBar.add(fontComboBox);
+		sideToolBar.add(boldButton);
+		sideToolBar.add(italicButton);
+		sideToolBar.add(underlineButton);
+		sideToolBar.add(highlightColor);
+		
+		toolPanel.add(sideToolBar);
+	}
+	
+
+	private void createTextPanel() {
 		// Set layout and bounds for the TextPanel that contains text editing area
 		textPanel.setLayout(new BorderLayout());
 		textPanel.setBounds(168, 72, 605, 704);
