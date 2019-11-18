@@ -2,9 +2,12 @@
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 
 public class Memo_redo implements ActionListener{
 	private JFrame mainFrame = new JFrame();
@@ -45,6 +48,18 @@ public class Memo_redo implements ActionListener{
 	// all components for the tools bar end here.
 	
 	
+	
+	private Highlighter.HighlightPainter grayPainter;
+	private Highlighter.HighlightPainter yellowPainter;
+	private Highlighter.HighlightPainter redPainter;
+	private Highlighter.HighlightPainter cyanPainter;
+	private Highlighter.HighlightPainter orangePainter;
+	private Highlighter.HighlightPainter pinkPainter;
+	private int firstUpdateIndex;
+	private int counter;
+
+	private Map<Integer, Highlighter.Highlight> highlights;
+	
 	public static void main(String[] args) {
 		Memo_redo DemoMemo = new Memo_redo("Demo");
 	}
@@ -80,8 +95,23 @@ public class Memo_redo implements ActionListener{
 			fontComboBox.addItem(fontList[i]);
 		}
 	}
-
+	private void createHighlightComboBox() {
+    String[] colorOptions = { "GRAY", "YELLOW", "RED", "CYAN", "ORANGE", "PINK" };
+		for (int i = 0; i < colorOptions.length; i++) {
+			highlightColor.addItem(colorOptions[i]);
+		}
+	}	
 	
+	private void TextHighlight() {
+		grayPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.GRAY);
+		yellowPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
+		redPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+		cyanPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.CYAN);
+		orangePainter = new DefaultHighlighter.DefaultHighlightPainter(Color.ORANGE);
+		pinkPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.PINK);
+		firstUpdateIndex = -1;
+		counter = 0;
+	}
 	private void createToolBar() {
 		toolPanel.setLayout(new BorderLayout());
 		
