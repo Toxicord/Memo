@@ -1,11 +1,11 @@
 
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.*;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 
@@ -35,20 +35,20 @@ public class Memo_redo implements ActionListener{
 	// all components for the tools bar are defined from here:
 	private JToolBar toolBar = new JToolBar();
 	
-	private JComboBox fontComboBox = new JComboBox();
-	private JComboBox highlightColor = new JComboBox();
+	private JComboBox<String> fontComboBox = new JComboBox<String>();
+	private JComboBox<String> highlightColor = new JComboBox<String>();
 	
 	private JButton addTabButton = new JButton("Add new tab");
-	ImageIcon bold = new ImageIcon("src/bold.jpg");
+	ImageIcon bold = new ImageIcon("src/test/bold.jpg");
 	private JButton boldButton = new JButton(bold);
-	ImageIcon italic = new ImageIcon("src/italic.jpg");
+	ImageIcon italic = new ImageIcon("src/test/italic.jpg");
 	private JButton italicButton = new JButton(italic);
-	ImageIcon under = new ImageIcon("src/under.jpg");
+	ImageIcon under = new ImageIcon("src/test/under.jpg");
 	private JButton underlineButton = new JButton(under);
 	// all components for the tools bar end here.
 	
 	
-	
+	private String[] colorOptions = { "GRAY", "YELLOW", "RED", "CYAN", "ORANGE", "PINK" };
 	private Highlighter.HighlightPainter grayPainter;
 	private Highlighter.HighlightPainter yellowPainter;
 	private Highlighter.HighlightPainter redPainter;
@@ -67,7 +67,7 @@ public class Memo_redo implements ActionListener{
 	public Memo_redo(String title) {
 		mainFrame.setTitle(title);
 		mainFrame.setDefaultCloseOperation(mainFrame.EXIT_ON_CLOSE);
-		mainFrame.setSize(400,200);
+		mainFrame.setSize(700,700);
 		mainFrame.setLayout(new BorderLayout());
 		
 		createMenuBar();
@@ -76,6 +76,10 @@ public class Memo_redo implements ActionListener{
 		createNorthPanel();
 		
 		createFontComboBox();
+		
+		createHighlightComboBox();
+		TextHighlight();
+		actionToHighlightComboBox();
 		
 		mainFrame.add(northPanel, BorderLayout.NORTH);
 		mainFrame.add(textPanel, BorderLayout.CENTER);
@@ -95,8 +99,13 @@ public class Memo_redo implements ActionListener{
 			fontComboBox.addItem(fontList[i]);
 		}
 	}
+	
+	
+	/*
+	 * Color Highlight starts here
+	 */
 	private void createHighlightComboBox() {
-    String[] colorOptions = { "GRAY", "YELLOW", "RED", "CYAN", "ORANGE", "PINK" };
+    
 		for (int i = 0; i < colorOptions.length; i++) {
 			highlightColor.addItem(colorOptions[i]);
 		}
@@ -112,6 +121,57 @@ public class Memo_redo implements ActionListener{
 		firstUpdateIndex = -1;
 		counter = 0;
 	}
+	
+	private void actionToHighlightComboBox() {
+		highlightColor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				String text = null;
+				text = textPane[1].getSelectedText();
+				if (text != null && text.length() > 0) {
+					int startIndex = textPane[1].getText().indexOf(text);
+					int endIndex = startIndex + text.length();
+					Highlighter highlighter = textPane[1].getHighlighter();
+					
+					String color = (String) highlightColor.getSelectedItem();
+					try {
+						if (color == colorOptions[0]) {
+							System.out.println("Color Selected : " + color);
+							highlighter.addHighlight(startIndex, endIndex, grayPainter);
+						} else if (color == colorOptions[1]) {
+							System.out.println("Color Selected : " + color);
+							highlighter.addHighlight(startIndex, endIndex, yellowPainter);
+						} else if (color == colorOptions[2]) {
+							System.out.println("Color Selected : " + color);
+							highlighter.addHighlight(startIndex, endIndex, redPainter);
+						} else if (color == colorOptions[3]) {
+							System.out.println("Color Selected : " + color);
+							highlighter.addHighlight(startIndex, endIndex, cyanPainter);
+						} else if (color == colorOptions[4]) {
+							System.out.println("Color Selected : " + color);
+							highlighter.addHighlight(startIndex, endIndex, orangePainter);
+						} else if (color == colorOptions[5]) {
+							System.out.println("Color Selected : " + color);
+							highlighter.addHighlight(startIndex, endIndex, pinkPainter);
+						}
+						Highlighter.Highlight[] highlightIndex = highlighter.getHighlights();
+
+					} catch (BadLocationException ble) {
+						ble.printStackTrace();
+					}
+				}	
+				
+			};
+		});
+		
+		
+	}
+	
+	
+	/*
+	 * Color Highlight ends here
+	 */
+	
+	
 	private void createToolBar() {
 		toolPanel.setLayout(new BorderLayout());
 		
@@ -169,6 +229,7 @@ public class Memo_redo implements ActionListener{
 			textPane[totalNumbTab] = new JTextPane();
 			// Insert the new TextPane above to the latest tab
 			textTabbedPane.insertTab("New tab", null, textPane[totalNumbTab], null, textTabbedPane.getTabCount() - 1);
+			totalNumbTab++;
 		}
 		
 	}
