@@ -22,6 +22,9 @@ import javax.swing.text.Highlighter;
 public class TestTextArea implements ActionListener{
 	private JFrame mainFrame = new JFrame();
 	
+	//used for save recursion
+	private boolean loopConf;
+	
 	// all components for the menu bar are defined from here:
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu mnFile = new JMenu("File");
@@ -77,7 +80,7 @@ public class TestTextArea implements ActionListener{
 	public TestTextArea(String title) {
 		mainFrame.setTitle(title);
 		mainFrame.setDefaultCloseOperation(mainFrame.EXIT_ON_CLOSE);
-		mainFrame.setSize(400,200);
+		mainFrame.setSize(800,500);
 		mainFrame.setLayout(new BorderLayout());
 		
 		createMenuBar();
@@ -176,34 +179,49 @@ public class TestTextArea implements ActionListener{
 	//this is save
 	private void save(int tabCount) {
 		if(tabCount==0) {
-			//promt user if wants to save
-			String textsPane;
-			if(textPane[tabCount].getText()==null) {
-				textsPane="";
-			}else {
-				textsPane=textPane[tabCount].getText();
-			}
-			JFileChooser saveSel = new JFileChooser();
-			int saveConf = saveSel.showSaveDialog(mnSave);
-	        if (saveConf == JFileChooser.APPROVE_OPTION) {
-	        	 File selFile = saveSel.getSelectedFile();
-	        	 if (!selFile.getName().toLowerCase().endsWith(".txt")) {
-	                	selFile = new File(selFile.getParentFile(), selFile.getName() + ".txt");
-	                }
-	        	 try {
-					FileWriter fWriter = new FileWriter (selFile);
-					PrintWriter pWriter = new PrintWriter (fWriter);
-					pWriter.println (textsPane);
-					pWriter.close();
-	        	 }catch(FileNotFoundException e) {
-	        		 e.printStackTrace();
-	        	 } catch (IOException e) {
-	        		 e.printStackTrace();
-	        	 }
+			loopConf=true;
+			if(loopConf==true) {
+				//put a while loop here for the save all function, if not you can just remove the loopConf lines and if statements above
+				String textsPane;
+				if(textPane[tabCount].getText()==null) {
+					textsPane="";
+				}else {
+					textsPane=textPane[tabCount].getText();
+				}
+				JFileChooser saveSel = new JFileChooser();
+				int saveConf = saveSel.showSaveDialog(mnSave);
+		        if (saveConf == JFileChooser.APPROVE_OPTION) {
+		        	 File selFile = saveSel.getSelectedFile();
+		        	 if (!selFile.getName().toLowerCase().endsWith(".txt")) {
+		                	selFile = new File(selFile.getParentFile(), selFile.getName() + ".txt");
+		                }
+		        	 try {
+						FileWriter fWriter = new FileWriter (selFile);
+						PrintWriter pWriter = new PrintWriter (fWriter);
+						pWriter.println(textsPane);
+						pWriter.close();
+		        	 }catch(FileNotFoundException e) {
+		        		 e.printStackTrace();
+		        	 } catch (IOException e) {
+		        		 e.printStackTrace();
+		        	 }
+		        }
 	        	
 		    }
-		}else if(tabCount>1) {
-			
+		}else if(tabCount>0) {
+			int one=JOptionPane.showConfirmDialog(null,"Would you like to save only your currently selected file?","SaveCurrentOneChoiceWindow",JOptionPane.YES_NO_OPTION);
+			if(one==JOptionPane.YES_OPTION) {
+				//get currently selected tab
+				//use eventChange like a button perf
+			}else if(one==JOptionPane.NO_OPTION) {
+				int all=JOptionPane.showConfirmDialog(null,"Would you like to save all of your files?","SaveAllChoiceWindow",JOptionPane.YES_NO_OPTION);//currently loops, due to an error with loopConf 
+				if (all == JOptionPane.YES_OPTION) {
+					//if I choose not to do this here, make a brand new save all setup here. Probably for the better
+					loopConf=true; //try to change this variable 
+					save(tabCount);//recalls the method with loopConf set to true
+				}
+			}
+			//if exited, it does nothing
 		}
 	}
 	//save end
@@ -218,7 +236,6 @@ public class TestTextArea implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String buttonClicked = e.getActionCommand();
-		
 		if (buttonClicked.equalsIgnoreCase("Add new tab")) {
 			// Create new TextPane
 			textPane[totalNumbTab] = new JTextPane();
