@@ -1,4 +1,6 @@
-
+/*
+ * Name: Thach Nguyen, Dayton Close, Sherif Elbarawi
+ */
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Map;
