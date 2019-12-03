@@ -179,16 +179,40 @@ public class TestTextArea implements ActionListener{
 	//this is save
 	private void save(int tabCount) {
 		if(tabCount==0) {
-			loopConf=true;
-			if(loopConf==true) {
-				//put a while loop here for the save all function, if not you can just remove the loopConf lines and if statements above
+			String textsPane;
+			if(textPane[tabCount].getText()==null) {
+				textsPane="";
+			}else {
+				textsPane=textPane[tabCount].getText();
+			}
+			JFileChooser saveSel = new JFileChooser();//defaults to documents directory
+			int saveConf = saveSel.showSaveDialog(mnSave);
+	        if (saveConf == JFileChooser.APPROVE_OPTION) {
+	        	 File selFile = saveSel.getSelectedFile();
+	        	 if (!selFile.getName().toLowerCase().endsWith(".txt")) {
+	                	selFile = new File(selFile.getParentFile(), selFile.getName() + ".txt");
+	                }
+	        	 try {
+					FileWriter fWriter = new FileWriter (selFile);
+					PrintWriter pWriter = new PrintWriter (fWriter);
+					pWriter.println(textsPane);
+					pWriter.close();
+	        	 }catch(FileNotFoundException e) {
+	        		 e.printStackTrace();
+	        	 } catch (IOException e) {
+	        		 e.printStackTrace();
+	        	 }
+	        }
+		}else if(tabCount>0) {
+			int one=JOptionPane.showConfirmDialog(null,"Would you like to save only your currently selected file?","SaveCurrentOneChoiceWindow",JOptionPane.YES_NO_OPTION);
+			if(one==JOptionPane.YES_OPTION) {//might have to redo this section do to repitition
 				String textsPane;
-				if(textPane[tabCount].getText()==null) {
+				if(textPane[textTabbedPane.getSelectedIndex()].getText()==null) {
 					textsPane="";
 				}else {
-					textsPane=textPane[tabCount].getText();
+					textsPane=textPane[textTabbedPane.getSelectedIndex()].getText();
 				}
-				JFileChooser saveSel = new JFileChooser();
+				JFileChooser saveSel = new JFileChooser();//defaults to documents directory
 				int saveConf = saveSel.showSaveDialog(mnSave);
 		        if (saveConf == JFileChooser.APPROVE_OPTION) {
 		        	 File selFile = saveSel.getSelectedFile();
@@ -206,19 +230,41 @@ public class TestTextArea implements ActionListener{
 		        		 e.printStackTrace();
 		        	 }
 		        }
-	        	
-		    }
-		}else if(tabCount>0) {
-			int one=JOptionPane.showConfirmDialog(null,"Would you like to save only your currently selected file?","SaveCurrentOneChoiceWindow",JOptionPane.YES_NO_OPTION);
-			if(one==JOptionPane.YES_OPTION) {
-				//get currently selected tab
-				//use eventChange like a button perf
 			}else if(one==JOptionPane.NO_OPTION) {
-				int all=JOptionPane.showConfirmDialog(null,"Would you like to save all of your files?","SaveAllChoiceWindow",JOptionPane.YES_NO_OPTION);//currently loops, due to an error with loopConf 
+				int all=JOptionPane.showConfirmDialog(null,"Would you like to save all of your files?","SaveAllChoiceWindow",JOptionPane.YES_NO_OPTION);//currently loops, due to an error with loopConf
 				if (all == JOptionPane.YES_OPTION) {
-					//if I choose not to do this here, make a brand new save all setup here. Probably for the better
-					loopConf=true; //try to change this variable 
-					save(tabCount);//recalls the method with loopConf set to true
+					String signifier="";
+					int loop = 0;
+					while(loop!=1) {
+						signifier = JOptionPane.showInputDialog("Please enter a unique identifier for your files. \n(ie: 10/11/12 or this weeks notes)\n(also, note all the files are saved in the 'documents' folder");
+						if ((signifier != null) && (signifier.length() > 0)) {
+							loop=1;
+						}else {
+							break;
+						}
+					}
+					if(loop==1) {
+						int i=0;
+						String outString;
+						FileWriter writer = null;
+						PrintWriter printer = null;
+						while(!(i>tabCount)) {
+							try {
+								int namingPurpose=i+1;
+								String dirSTR=(new JFileChooser().getFileSystemView().getDefaultDirectory().toString())+"/"+signifier+" tab #"+namingPurpose+".txt";
+								File saveAll = new File(dirSTR);
+								outString=textPane[i].getText();
+								writer = new FileWriter(saveAll);
+								printer = new PrintWriter (writer);
+								printer.println(outString);
+								writer.close();
+								i++;
+							} catch (IOException e) {
+								i=tabCount;
+								e.printStackTrace();
+							}
+						}
+					}
 				}
 			}
 			//if exited, it does nothing
