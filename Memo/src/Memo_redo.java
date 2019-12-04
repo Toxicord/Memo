@@ -330,7 +330,7 @@ public class Memo_redo implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				actionToSave();
+				actionToSave(totalNumbTab-1);
 			}
 			
 		});
@@ -348,22 +348,27 @@ public class Memo_redo implements ActionListener{
 		menuBar.add(mnWindows);
 	}
 	
-	private void actionToSave() {
-		JFileChooser saveDialog = new JFileChooser();
-		int saveConf=saveDialog.showSaveDialog(mnSave);
-		if(saveConf== JFileChooser.APPROVE_OPTION) {
-			File selFile=saveDialog.getSelectedFile();
-			
-			try {
-				ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(selFile));
-				outputStream.writeObject(textPane[textTabbedPane.getSelectedIndex()]);
-				outputStream.close();
-			} catch (FileNotFoundException e) {
-				System.out.println("File not found");
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+	private void actionToSave(int numberOfTabs) {
+		//test for multiple tabs
+		int textVSobj=JOptionPane.showConfirmDialog(null,"Would you like to save your file with the highlights and font?/n(Selecting no will allow you to save in a '.txt' format.)","SaveCurrentOneChoiceWindow",JOptionPane.YES_NO_OPTION);
+		if(textVSobj==JOptionPane.YES_OPTION) {//might have to redo this section do to repitition
+			JFileChooser saveDialog = new JFileChooser();
+			int saveConf=saveDialog.showSaveDialog(mnSave);
+			if(saveConf== JFileChooser.APPROVE_OPTION) {
+				File selFile=saveDialog.getSelectedFile();
+				try {
+					ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(selFile));
+					outputStream.writeObject(textPane[textTabbedPane.getSelectedIndex()]);
+					outputStream.close();
+				} catch (FileNotFoundException e) {
+					System.out.println("File not found");
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
+		}else if(textVSobj==JOptionPane.NO_OPTION) {
+			saveOne(numberOfTabs);
 		}
 	}
 	
@@ -381,7 +386,11 @@ public class Memo_redo implements ActionListener{
 				System.out.println("File not found");
 				e.printStackTrace();
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println("wrong filetype");
+				//promt with ok saying wrong filetype
+				if (selFile.getName().toLowerCase().endsWith(".txt")) {
+					//open textfile and copy to a new tab
+		            }
 			} catch (ClassNotFoundException e) {
 				System.out.println("Class not found");
 				
@@ -389,22 +398,52 @@ public class Memo_redo implements ActionListener{
 		}
 	}
 	
+	private void saveOne(int tabCount) {
+		String textsPane;
+		if(textPane[textTabbedPane.getSelectedIndex()].getText()==null) {
+			textsPane="";
+		}else {
+			textsPane=textPane[textTabbedPane.getSelectedIndex()].getText();
+		}
+		JFileChooser saveSel = new JFileChooser();//defaults to documents directory
+		int saveConf = saveSel.showSaveDialog(mnSave);
+        if (saveConf == JFileChooser.APPROVE_OPTION) {
+        	 File selFile = saveSel.getSelectedFile();
+        	 if (!selFile.getName().toLowerCase().endsWith(".txt")) {
+                	selFile = new File(selFile.getParentFile(), selFile.getName() + ".txt");
+                }
+        	 try {
+				FileWriter fWriter = new FileWriter (selFile);
+				PrintWriter pWriter = new PrintWriter (fWriter);
+				pWriter.println(textsPane);
+				pWriter.close();
+        	 }catch(FileNotFoundException e) {
+        		 e.printStackTrace();
+        	 } catch (IOException e) {
+        		 e.printStackTrace();
+        	 }
+        }
+	}
+	
+	private void addTab() {
+		// Create new TextPane
+		textPane[textTabbedPane.getTabCount()-1] = new JTextPane();
+		// Insert the new TextPane above to the latest tab
+		textTabbedPane.insertTab("New tab " + textTabbedPane.getTabCount(), null, textPane[textTabbedPane.getTabCount()-1], null, textTabbedPane.getTabCount() - 1);
+		}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String buttonClicked = e.getActionCommand();
 		
 		if (buttonClicked.equalsIgnoreCase("Add new tab")) {
-			// Create new TextPane
-			textPane[textTabbedPane.getTabCount()-1] = new JTextPane();
-			// Insert the new TextPane above to the latest tab
-			textTabbedPane.insertTab("New tab " + textTabbedPane.getTabCount(), null, textPane[textTabbedPane.getTabCount()-1], null, textTabbedPane.getTabCount() - 1);
-			
+			addTab();
 		} else if (buttonClicked.equalsIgnoreCase("Delete tab")) {
-			if (textTabbedPane.getSelectedIndex() != textTabbedPane.getTabCount())
+			if (textTabbedPane.getSelectedIndex() != textTabbedPane.getTabCount()) {
 				textTabbedPane.remove(textTabbedPane.getSelectedIndex());
+			}
+			textPane[textTabbedPane.getSelectedIndex()]=null;
 			totalNumbTab--;
-		} 
-
-		
+		} 		
 	}
 }
