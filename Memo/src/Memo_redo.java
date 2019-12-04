@@ -369,12 +369,13 @@ public class Memo_redo implements ActionListener{
 	
 	private void actionToOpen() {
 		JFileChooser saveDialog = new JFileChooser();
-		int saveConf=saveDialog.showSaveDialog(mnOpen);
+		int saveConf=saveDialog.showOpenDialog(mnOpen);
 		if(saveConf== JFileChooser.APPROVE_OPTION) {
 			File selFile=saveDialog.getSelectedFile();
 			try {
 				ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(selFile));
 				JTextPane openTextPane = (JTextPane) inputStream.readObject();
+				textTabbedPane.insertTab("New tab " + textTabbedPane.getTabCount(), null, openTextPane, null, textTabbedPane.getTabCount() - 1);
 				inputStream.close();
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found");
@@ -383,6 +384,7 @@ public class Memo_redo implements ActionListener{
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				System.out.println("Class not found");
+				
 			}
 		}
 	}
