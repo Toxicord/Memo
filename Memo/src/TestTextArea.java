@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -21,6 +22,9 @@ import javax.swing.text.Highlighter;
 
 public class TestTextArea implements ActionListener{
 	private JFrame mainFrame = new JFrame();
+	
+	//used for save recursion
+	private boolean loopConf;
 	
 	// all components for the menu bar are defined from here:
 	private JMenuBar menuBar = new JMenuBar();
@@ -77,7 +81,7 @@ public class TestTextArea implements ActionListener{
 	public TestTextArea(String title) {
 		mainFrame.setTitle(title);
 		mainFrame.setDefaultCloseOperation(mainFrame.EXIT_ON_CLOSE);
-		mainFrame.setSize(400,200);
+		mainFrame.setSize(800,500);
 		mainFrame.setLayout(new BorderLayout());
 		
 		createMenuBar();
@@ -173,17 +177,65 @@ public class TestTextArea implements ActionListener{
 		mnOpen.addActionListener(this);
 	}
 	
-	//this is save
+	//this is the main save method
 	private void save(int tabCount) {
 		if(tabCount==0) {
-			//promt user if wants to save
+			saveOne(tabCount);
+		}else if(tabCount>0) {
+			int one=JOptionPane.showConfirmDialog(null,"Would you like to save only your currently selected file?","SaveCurrentOneChoiceWindow",JOptionPane.YES_NO_OPTION);
+			if(one==JOptionPane.YES_OPTION) {//might have to redo this section do to repitition
+				saveOne(tabCount);
+			}else if(one==JOptionPane.NO_OPTION) {
+				int all=JOptionPane.showConfirmDialog(null,"Would you like to save all of your files?","SaveAllChoiceWindow",JOptionPane.YES_NO_OPTION);//currently loops, due to an error with loopConf
+				if (all == JOptionPane.YES_OPTION) {
+					String signifier="";
+					int loop = 0;
+					while(loop!=1) {
+						signifier = JOptionPane.showInputDialog("Please enter a unique identifier for your files. \n(ie: 10/11/12 or this weeks notes)\n(also, note all the files are saved in the 'documents' folder");
+						if ((signifier != null) && (signifier.length() > 0)) {
+							loop=1;
+						}else {
+							break;
+						}
+					}
+					if(loop==1) {
+						int i=0;
+						String outString;
+						FileWriter writer = null;
+						PrintWriter printer = null;
+						while(!(i>tabCount)) {
+							try {
+								int namingPurpose=i+1;
+								String dirSTR=(new JFileChooser().getFileSystemView().getDefaultDirectory().toString())+"/"+signifier+" tab #"+namingPurpose+".txt";
+								File saveAll = new File(dirSTR);
+								outString=textPane[i].getText();
+								writer = new FileWriter(saveAll);
+								printer = new PrintWriter (writer);
+								printer.println(outString);
+								writer.close();
+								i++;
+							} catch (IOException e) {
+								i=tabCount;
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+			//if exited, it does nothing
+		}
+	}
+	//main save end
+	
+	//saves a single file method because it's better to do this than rewrite it
+		private void saveOne(int tabCount) {
 			String textsPane;
-			if(textPane[tabCount].getText()==null) {
+			if(textPane[textTabbedPane.getSelectedIndex()].getText()==null) {
 				textsPane="";
 			}else {
-				textsPane=textPane[tabCount].getText();
+				textsPane=textPane[textTabbedPane.getSelectedIndex()].getText();
 			}
-			JFileChooser saveSel = new JFileChooser();
+			JFileChooser saveSel = new JFileChooser();//defaults to documents directory
 			int saveConf = saveSel.showSaveDialog(mnSave);
 	        if (saveConf == JFileChooser.APPROVE_OPTION) {
 	        	 File selFile = saveSel.getSelectedFile();
@@ -193,38 +245,53 @@ public class TestTextArea implements ActionListener{
 	        	 try {
 					FileWriter fWriter = new FileWriter (selFile);
 					PrintWriter pWriter = new PrintWriter (fWriter);
-					pWriter.println (textsPane);
+					pWriter.println(textsPane);
 					pWriter.close();
 	        	 }catch(FileNotFoundException e) {
 	        		 e.printStackTrace();
 	        	 } catch (IOException e) {
 	        		 e.printStackTrace();
 	        	 }
-	        	
-		    }
-		}else if(tabCount>1) {
-			
+	        }
 		}
-	}
-	//save end
-
+	//save recursion end
+		
 	//this is open
 	private void openF() {
-		// TODO Auto-generated method stub
+		boolean error;
+		JFileChooser openChoose = new JFileChooser();
+		int intCastOpenChoose=openChoose.showSaveDialog(null);
+		if (intCastOpenChoose == JFileChooser.APPROVE_OPTION) {
+			File selFile = openChoose.getSelectedFile();
+			 if (!selFile.getName().toLowerCase().endsWith(".txt")) {
+             	error=true;
+             }
+			 try {
+					
+	        	 }catch(FileNotFoundException e) {
+	        		 e.printStackTrace();
+	        	 } catch (IOException e) {
+	        		 e.printStackTrace();
+	        	 }
+	        }
+		}
 		
 	}
 	//open end
 	
+	private void newTab() {
+		// Create new TextPane
+		textPane[totalNumbTab] = new JTextPane();
+		// Insert the new TextPane above to the latest tab
+		textTabbedPane.insertTab("New tab", null, textPane[totalNumbTab], null, textTabbedPane.getTabCount() - 1);
+		totalNumbTab++;//used to increment the tab number. Otherwise it'll only stay in textPane[1]
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String buttonClicked = e.getActionCommand();
-		
 		if (buttonClicked.equalsIgnoreCase("Add new tab")) {
-			// Create new TextPane
-			textPane[totalNumbTab] = new JTextPane();
-			// Insert the new TextPane above to the latest tab
-			textTabbedPane.insertTab("New tab", null, textPane[totalNumbTab], null, textTabbedPane.getTabCount() - 1);
-			totalNumbTab++;//used to increment the tab number. Otherwise it'll only stay in textPane[1]
+			newTab();
 		}else if(e.getSource()==mnOpen) {
 			openF();
 		}else if(e.getSource()==mnSave) {
