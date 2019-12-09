@@ -1,4 +1,4 @@
-# Memo #
+# Memo - A notepad program #
 Our CSCI 1082 Object Oriented Programming Final assignment.
 
 Contributers are:
