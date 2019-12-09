@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 
-public class Memo_redo implements ActionListener{
+public class Memo implements ActionListener{
 	private JFrame mainFrame = new JFrame();
 	
 	// all components for the menu bar are defined from here:
@@ -55,11 +55,11 @@ public class Memo_redo implements ActionListener{
 
 	
 	public static void main(String[] args) {
-		Memo_redo DemoMemo = new Memo_redo("Demo");
+		Memo DemoMemo = new Memo("Demo");
 		//this is what initiates the code
 	}
 	
-	public Memo_redo(String title) {
+	public Memo(String title) {
 		mainFrame.setTitle(title);
 		mainFrame.setDefaultCloseOperation(mainFrame.EXIT_ON_CLOSE);
 		mainFrame.setSize(700,700);
@@ -107,9 +107,12 @@ public class Memo_redo implements ActionListener{
 		
 		// Create the first TextPane
 		textPane[0] = new JTextPane();
+		//sets info about the program
+		textPane[0].setText("This program currently supports:\n\tSaving & opening our Binary filetypes (saves and opens by default):\n\t\t that save your text & non-text related data(like highlights and font stuff) to a file.\n\tSaving & opening .TXT formats: \n\t\tYou can open .txt formats natively, and you can save your notes as text by\n\t\tputting .txt at the end of your file when choosing the files save name.\n\t\t(Note that choosing the .txt format will NOT save your highlight or font data)");
 		totalNumbTab++;
 		// Initialize the first tab with a TextPane with a name of the array+1
 		textTabbedPane.addTab("Tab " + 1, textPane[0]);
+		
 		
 		// "Add Tab" button for the tab pane, and add actionListener to the button
 		textTabbedPane.addTab(null, null);
