@@ -252,7 +252,7 @@ public class Memo implements ActionListener{
 						StyleConstants.setBackground(style, Color.PINK);
 					} else if (color == colorOptions[6]) {
 						System.out.println("Color Selected : " + color);
-						doc.removeStyle(style.getName());
+						StyleConstants.setBackground(style, Color.WHITE);
 					} 
 					
 			        style = textPane[textTabbedPane.getSelectedIndex()].getStyle("MyHilite");
