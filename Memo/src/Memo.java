@@ -379,7 +379,7 @@ public class Memo implements ActionListener{
 							 pWriter.println(textsPane);
 							 pWriter.close();
 			        	 }catch(FileNotFoundException e1) {
-			        		 //only occurs when opening file just before deleting
+			        		 //only occurs when saving file just before deleting
 			        		 e1.printStackTrace();
 			        	 } catch (IOException e2) {
 			        		//should never occur
@@ -393,7 +393,7 @@ public class Memo implements ActionListener{
 							outputStream.close();
 						} catch (FileNotFoundException ea) {
 							System.out.println("File not found");
-							//only occurs when opening file just before deleting
+							//only occurs when saving file just before deleting
 							ea.printStackTrace();
 						} catch (IOException ee) {
 							//if saved file is in an odd filetype
@@ -430,8 +430,9 @@ public class Memo implements ActionListener{
 							try {
 								String tabContent = null;
 								Scanner scnr = new Scanner(selFile);
+								scnr.useDelimiter("\\Z"); 
 								while(scnr.hasNextLine()){
-									tabContent = scnr.nextLine();
+									tabContent = scnr.next();
 								}
 							    textPane[totalNumbTab] = new JTextPane();
 							    //sets the tab content to file content
