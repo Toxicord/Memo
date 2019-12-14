@@ -10,7 +10,9 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 
-public class Memo implements ActionListener{
+public class Memo extends Highlight implements ActionListener{
+	
+	
 	private JFrame mainFrame = new JFrame();
 	
 	// all components for the menu bar are defined from here:
@@ -52,12 +54,6 @@ public class Memo implements ActionListener{
 	ImageIcon under = new ImageIcon("under.jpg");
 	private JButton underlineButton = new JButton(under);
 	// all components for the tools bar end here.
-
-	
-	public static void main(String[] args) {
-		Memo DemoMemo = new Memo("Demo");
-		//this is what initiates the code
-	}
 	
 	public Memo(String title) {
 		mainFrame.setTitle(title);
@@ -75,8 +71,8 @@ public class Memo implements ActionListener{
 		createFontComboBox();
 		createHighlightComboBox();
 		//actions for those buttons, jcomboboxes and alike
-		actionToFontComboBox();
-		actionToHighlightComboBox();
+		actionToFontComboBox(textTabbedPane,fontComboBox,fontOption,textPane);
+		actionToHighlightComboBox(textTabbedPane,highlightColor,colorOptions,textPane);
 		actionToBoldBtn();
 		actionToItalicBtn();
 		actionToUnderLineBtn();
@@ -167,104 +163,6 @@ public class Memo implements ActionListener{
 			highlightColor.addItem(colorOptions[i]);
 		}
 	}	
-	
-	private void actionToFontComboBox() {
-		//adds a listener for fonts
-		fontComboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				String text = null;
-				//gets current text
-				text = textPane[textTabbedPane.getSelectedIndex()].getSelectedText();
-				if (text != null && text.length() > 0) {
-					//gets font starts & ends from highlighted text
-					int startIndex = textPane[textTabbedPane.getSelectedIndex()].getSelectionStart();
-					int endIndex = textPane[textTabbedPane.getSelectedIndex()].getSelectionEnd();
-
-					StyledDocument doc = textPane[textTabbedPane.getSelectedIndex()].getStyledDocument();
-					//sets font str
-					String font = (String) fontComboBox.getSelectedItem();
-					Style style = textPane[textTabbedPane.getSelectedIndex()].addStyle("MyHilite", null);
-					//combobox option checker, sets fonts accordingly
-					if (font == fontOption[0]) {
-						System.out.println("Font Selected : " + font);
-						StyleConstants.setFontFamily(style, "Arial");
-					} else if (font == fontOption[1]) {
-						System.out.println("Color Selected : " + font);
-						StyleConstants.setFontFamily(style, "Times New Roman");
-					} else if (font == fontOption[2]) {
-						System.out.println("Color Selected : " + font);
-						StyleConstants.setFontFamily(style, "Courier New");
-					} else if (font == fontOption[3]) {
-						System.out.println("Color Selected : " + font);
-						StyleConstants.setFontFamily(style, "Arial Black");
-					} else if (font == fontOption[4]) {
-						System.out.println("Color Selected : " + font);
-						StyleConstants.setFontFamily(style, "Courier");
-					} else if (font == fontOption[5]) {
-						System.out.println("Color Selected : " + font);
-						StyleConstants.setFontFamily(style, "Helvetica");
-					}
-					//Highlighter.Highlight[] highlightIndex = highlighter.getHighlights();
-					
-			        style = textPane[textTabbedPane.getSelectedIndex()].getStyle("MyHilite");
-			        doc.setCharacterAttributes(startIndex, endIndex - startIndex, style, false);
-
-				}	
-				
-			};
-		});		
-	}
-
-	private void actionToHighlightComboBox() {
-		//adds a listener for highlighter
-		highlightColor.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				String text = null;
-				//gets current text
-				text = textPane[textTabbedPane.getSelectedIndex()].getSelectedText();
-				if (text != null && text.length() > 0) {
-					//gets hgihlight starts & ends from mouse highlighted text
-					int startIndex = textPane[textTabbedPane.getSelectedIndex()].getSelectionStart();
-					int endIndex = textPane[textTabbedPane.getSelectedIndex()].getSelectionEnd();
-					
-					StyledDocument doc = textPane[textTabbedPane.getSelectedIndex()].getStyledDocument();
-					//sets highlight str
-					String color = (String) highlightColor.getSelectedItem();
-					Style style = textPane[textTabbedPane.getSelectedIndex()].addStyle("MyHilite", null);
-					//combobox option checker, sets highlights accordingly
-					if (color == colorOptions[0]) {
-						System.out.println("Color Selected : " + color);
-						StyleConstants.setBackground(style, Color.GRAY);
-					} else if (color == colorOptions[1]) {
-						System.out.println("Color Selected : " + color);
-						StyleConstants.setBackground(style, Color.YELLOW);
-					} else if (color == colorOptions[2]) {
-						System.out.println("Color Selected : " + color);
-						StyleConstants.setBackground(style, Color.RED);
-					} else if (color == colorOptions[3]) {
-						System.out.println("Color Selected : " + color);
-						StyleConstants.setBackground(style, Color.CYAN);
-					} else if (color == colorOptions[4]) {
-						System.out.println("Color Selected : " + color);
-						StyleConstants.setBackground(style, Color.ORANGE);
-					} else if (color == colorOptions[5]) {
-						System.out.println("Color Selected : " + color);
-						StyleConstants.setBackground(style, Color.PINK);
-					} else if (color == colorOptions[6]) {
-						System.out.println("Color Selected : " + color);
-						StyleConstants.setBackground(style, Color.WHITE);
-					} 
-					
-			        style = textPane[textTabbedPane.getSelectedIndex()].getStyle("MyHilite");
-			        doc.setCharacterAttributes(startIndex, endIndex - startIndex, style, false);
-
-				}	
-				
-			};
-		});
-		
-		
-	}
 	
 	private void actionToBoldBtn() {
 		boldButton.addActionListener( new ActionListener() {
