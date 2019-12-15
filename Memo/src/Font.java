@@ -31,10 +31,10 @@ public class Font {
 
 			StyledDocument doc = textPane.getStyledDocument();
 			//sets font str
-			Style style = textPane.addStyle("MyHilite", null);
-			System.out.println("Color Selected: " + font);
+			Style style = textPane.addStyle("MyFont", null);
+			System.out.println("Font Selected: " + font);
 			StyleConstants.setFontFamily(style, font);
-	        style = textPane.getStyle("MyHilite");
+	        style = textPane.getStyle("MyFont");
 	        doc.setCharacterAttributes(startIndex, endIndex - startIndex, style, false);
 		}
 	}
