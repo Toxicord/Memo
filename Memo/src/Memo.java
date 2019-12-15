@@ -47,7 +47,7 @@ public class Memo implements ActionListener{
 	// all components for the tools bar end here.
 	
 	private Highlighter newHighlighter = new Highlighter(colorOptions);
-	private Font newFontChanger = new Font(fontOption);
+	private Font newFontChanger = new Font();
 	private SaveFile newSaveFile = new SaveFile(mnSave);
 	private OpenFile newOpenFile = new OpenFile(textPane,mnOpen);
 	

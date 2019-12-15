@@ -9,11 +9,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 public class Font {
-	private String[] fontOption;
-	
-	public Font(String[] fontOptions)  {
-		this.setFontOption(fontOptions);
-	}
 	
 	/**
 	 * Use this method to change the font of a selected string
@@ -39,12 +34,6 @@ public class Font {
 		}
 	}
 
-	public String[] getFontOption() {
-		return fontOption;
-	}
 
-	public void setFontOption(String[] fontOption) {
-		this.fontOption = fontOption;
-	}
 
 }

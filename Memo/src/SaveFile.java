@@ -2,7 +2,7 @@
 
 /*
  * This allows user to save file in Binary as well as .text
- * Methods include: save()
+ * Methods include: Save()
  * 
  */
 import java.io.*;
