@@ -2,17 +2,16 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Scanner;
-
 import javax.swing.*;
 import javax.swing.text.*;
 
+import ok.OpenFile;
+import ok.SaveFile;
 
-public class Memo extends Highlight implements ActionListener{
-	
-	
+
+
+public class Memo implements ActionListener{
 	private JFrame mainFrame = new JFrame();
 	
 	// all components for the menu bar are defined from here:
@@ -23,7 +22,6 @@ public class Memo extends Highlight implements ActionListener{
 	private JMenuItem mnOpen = new JMenuItem("Open");
 	// all components for the menu bar end here:
 
-	
 	private JPanel textPanel = new JPanel();
 	private JPanel toolPanel = new JPanel();
 	private JPanel northPanel = new JPanel();
@@ -55,6 +53,11 @@ public class Memo extends Highlight implements ActionListener{
 	private JButton underlineButton = new JButton(under);
 	// all components for the tools bar end here.
 	
+	private Highlighter newHighlighter = new Highlighter(colorOptions);
+	private Font newFontChanger = new Font(fontOption);
+	private SaveFile newSaveFile = new SaveFile(mnSave);
+	private OpenFile newOpenFile = new OpenFile(textPane,mnOpen);
+	
 	public Memo(String title) {
 		mainFrame.setTitle(title);
 		mainFrame.setDefaultCloseOperation(mainFrame.EXIT_ON_CLOSE);
@@ -71,8 +74,8 @@ public class Memo extends Highlight implements ActionListener{
 		createFontComboBox();
 		createHighlightComboBox();
 		//actions for those buttons, jcomboboxes and alike
-		actionToFontComboBox(textTabbedPane,fontComboBox,fontOption,textPane);
-		actionToHighlightComboBox(textTabbedPane,highlightColor,colorOptions,textPane);
+		actionToFontComboBox();
+		actionToHighlightComboBox();
 		actionToBoldBtn();
 		actionToItalicBtn();
 		actionToUnderLineBtn();
@@ -87,6 +90,26 @@ public class Memo extends Highlight implements ActionListener{
 		mainFrame.setVisible(true);
 	}
 	
+	private void actionToHighlightComboBox() {
+		highlightColor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				newHighlighter.Highlight(textPane[textTabbedPane.getSelectedIndex()],(String) highlightColor.getSelectedItem());
+					//combobox option checker, sets fonts accordingly
+				
+			};
+		});				
+	}
+
+	private void actionToFontComboBox() {
+		fontComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				newFontChanger.ChangeFont(textPane[textTabbedPane.getSelectedIndex()],(String) fontComboBox.getSelectedItem());
+					//combobox option checker, sets fonts accordingly
+				
+			};
+		});				
+	}
+
 	private void createMenuBar() {
 		//adds components to proper menus
 		mnFile.add(mnSave);
@@ -254,110 +277,19 @@ public class Memo extends Highlight implements ActionListener{
 		mnSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String textsPane;
-				//checks if the currently selected pane if it's empty and intializes it to be not null
-				if(textPane[textTabbedPane.getSelectedIndex()].getText()==null) {
-					textsPane="";
-				}else {
-					//gets text on current selected pane
-					textsPane=textPane[textTabbedPane.getSelectedIndex()].getText();
-				}
-				
-				JFileChooser saveDialog = new JFileChooser();
-				int saveConf=saveDialog.showSaveDialog(mnSave);
-				//prompts to save
-				if(saveConf== JFileChooser.APPROVE_OPTION) {
-					File selFile=saveDialog.getSelectedFile();
-					//checks if selected file is in txt format
-					if (selFile.getName().toLowerCase().endsWith(".txt")) {
-			        	 try {
-			        		 //write file to text
-							 FileWriter fWriter = new FileWriter (selFile);
-							 PrintWriter pWriter = new PrintWriter (fWriter);
-							 pWriter.println(textsPane);
-							 pWriter.close();
-			        	 }catch(FileNotFoundException e1) {
-			        		 //only occurs when saving file just before deleting
-			        		 e1.printStackTrace();
-			        	 } catch (IOException e2) {
-			        		//should never occur
-			        		 e2.printStackTrace();
-			        	 }
-					}else {
-						try {
-							//write object to object file
-							ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(selFile));
-							outputStream.writeObject(textPane[textTabbedPane.getSelectedIndex()]);
-							outputStream.close();
-						} catch (FileNotFoundException ea) {
-							System.out.println("File not found");
-							//only occurs when saving file just before deleting
-							ea.printStackTrace();
-						} catch (IOException ee) {
-							//if saved file is in an odd filetype
-							ee.printStackTrace();
-						}
-					}
-				};
+				newSaveFile.save(textPane[textTabbedPane.getSelectedIndex()]);
 			}
-			
 		});
+			
 	}
 	
 	private void actionToOpen() {
 		mnOpen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser openDialog = new JFileChooser();
-				int saveConf= openDialog.showOpenDialog(mnOpen);
-				if(saveConf== JFileChooser.APPROVE_OPTION) {
-					File selFile= openDialog.getSelectedFile();
-					try {
-						ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(selFile));
-						JTextPane openTextPane = (JTextPane) inputStream.readObject();
-						textPane[textTabbedPane.getTabCount()-1] = openTextPane;
-						textTabbedPane.insertTab(selFile.getName(), null, textPane[textTabbedPane.getTabCount()-1], null, textTabbedPane.getTabCount() - 1);
-						inputStream.close();
-						//log
-	                	System.out.print("\n(B)File successfully opened and converted from binary to string on a new pane!");
-					} catch (FileNotFoundException e1) {
-						System.out.println("File not found");
-						e1.printStackTrace();
-					} catch (IOException e2) {
-						if (selFile.getName().toLowerCase().endsWith(".txt")) {
-							try {
-								String tabContent = null;
-								Scanner scnr = new Scanner(selFile);
-								scnr.useDelimiter("\\Z"); 
-								while(scnr.hasNextLine()){
-									tabContent = scnr.next();
-								}
-							    textPane[totalNumbTab] = new JTextPane();
-							    //sets the tab content to file content
-							    textPane[totalNumbTab].setText(tabContent);
-								textTabbedPane.insertTab(selFile.getName(), null, textPane[totalNumbTab], null, textTabbedPane.getTabCount() - 1);
-								totalNumbTab++;//used to increment the tab number. Otherwise it'll only stay in textPane[1]
-								//log
-			                	System.out.print("\n(T)File successfully opened and converted from text to string on a new pane!");
-							    }catch(FileNotFoundException e3) {
-							    	//only occurs when opening file just before deleting
-								}catch(IOException e4) {
-									//should never occur
-								}
-		                }else {
-		                	//log
-		                	System.out.print("\nUNSUPPORTED filetype was selected to open");
-		                }
-					} catch (ClassNotFoundException e5) {
-						System.out.println("Class not found");
-						
-					}
-				}
+				newOpenFile.Open(textTabbedPane);
 			}
-			
 		});
-		
-		
 	}
 	
 	private void actionToRename() {
