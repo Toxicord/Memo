@@ -20,7 +20,7 @@ public class SaveFile {
 	 * Use this method to save a Memo file in binary or .txt
 	 * @param textPane
 	 */
-	public void save(JTextPane textPane) {
+	public void Save(JTextPane textPane) {
 		
 		String textsPane;
 		//checks if the currently selected pane if it's empty and intializes it to be not null

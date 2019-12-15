@@ -1,5 +1,5 @@
 /*
- * 	FontChanger class
+ * 	Font class
  * 	This create a tool to change font of a selected string
  * 	Methods include: ChangeFont() 
  */

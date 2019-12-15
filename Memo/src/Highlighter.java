@@ -1,9 +1,10 @@
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+/*
+ *  This creates a tool to highlight a selected string with different colors
+ *  Methods include: Highlight()
+ *  Color support: Yellow, Red, Cyan, Orange, Pink, White
+ */
 
-import javax.swing.JComboBox;
-import javax.swing.JTabbedPane;
+import java.awt.Color;
 import javax.swing.JTextPane;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -16,6 +17,11 @@ public class Highlighter {
 		this.colorOptions = colorOptions;
 	}
 	
+	/**
+	 * Use this Method to change background of a selected string
+	 * @param textPane
+	 * @param color
+	 */
 	public void Highlight(JTextPane textPane, String color) {
 
 		String text = null;
@@ -57,8 +63,6 @@ public class Highlighter {
 
 		}	
 		
-
-
-
+	}
 }
 

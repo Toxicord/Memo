@@ -1,15 +1,8 @@
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
-import java.util.Scanner;
 import javax.swing.*;
 import javax.swing.text.*;
-
-import ok.OpenFile;
-import ok.SaveFile;
-
-
 
 public class Memo implements ActionListener{
 	private JFrame mainFrame = new JFrame();
@@ -94,8 +87,6 @@ public class Memo implements ActionListener{
 		highlightColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				newHighlighter.Highlight(textPane[textTabbedPane.getSelectedIndex()],(String) highlightColor.getSelectedItem());
-					//combobox option checker, sets fonts accordingly
-				
 			};
 		});				
 	}
@@ -103,9 +94,7 @@ public class Memo implements ActionListener{
 	private void actionToFontComboBox() {
 		fontComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				newFontChanger.ChangeFont(textPane[textTabbedPane.getSelectedIndex()],(String) fontComboBox.getSelectedItem());
-					//combobox option checker, sets fonts accordingly
-				
+				newFontChanger.ChangeFont(textPane[textTabbedPane.getSelectedIndex()],(String) fontComboBox.getSelectedItem());				
 			};
 		});				
 	}
@@ -277,7 +266,7 @@ public class Memo implements ActionListener{
 		mnSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				newSaveFile.save(textPane[textTabbedPane.getSelectedIndex()]);
+				newSaveFile.Save(textPane[textTabbedPane.getSelectedIndex()]);
 			}
 		});
 			
